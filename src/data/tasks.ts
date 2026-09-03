@@ -14,4 +14,16 @@ export const tasks: Task[] = [
     status: "pending",
     createdAt: new Date(),
   },
+  {
+    id: 3,
+    title: "Revisar la documentación",
+    status: "pending",
+    createdAt: new Date(),
+  },
+  {
+    id: 4,
+    title: "Implementar la API REST",
+    status: "completed",
+    createdAt: new Date(),
+  },
 ];

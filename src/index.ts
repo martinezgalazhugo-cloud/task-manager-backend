@@ -5,9 +5,12 @@ import {
   createTask,
   completeTask,
   listTasks,
+  deleteTask,
+  listPendingTasks,
 } from "./services/task.service.js";
 import { delay } from "./utils/delay.js";
 import { getAppName } from "./utils/env.js";
+import { log } from "node:console";
 
 const showTasks = (): void => {
   const rows = listTasks().map((task) => ({
@@ -42,7 +45,40 @@ const main = async (): Promise<void> => {
 
     console.error(`Error controlado: ${message}`);
   }
+
+  try {
+    deleteTask(200);
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Error desconocido";
+
+    console.error(`Error controlado: ${message}`);
+  }
+
+  try {
+    completeTask(2);
+    console.log("Tarea 2 completada.");
+
+    deleteTask(4);
+    console.log("Tarea 4 eliminada.");
+
+    showTasks();
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Error desconocido";
+    console.error(`Error controlado: ${message}`);
+  }
+
+  console.log("\nFinalizando aplicacion...");
+  await delay(300);
 };
+
+try {
+  listPendingTasks();
+} catch (error: unknown) {
+  const message = error instanceof Error ? error.message : "Error desconocido";
+  console.error(`Error controlado: ${message}`);
+}
 
 main().catch((error: unknown) => {
   console.error("Error no controlado:", error);
