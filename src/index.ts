@@ -56,6 +56,18 @@ const main = async (): Promise<void> => {
   }
 
   try {
+    listPendingTasks();
+
+    console.log("\nTareas pendientes");
+    const pendingTasks = listPendingTasks();
+    console.table(pendingTasks);
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : "Error desconocido";
+    console.error(`Error controlado: ${message}`);
+  }
+
+  try {
     completeTask(2);
     console.log("Tarea 2 completada.");
 
@@ -72,13 +84,6 @@ const main = async (): Promise<void> => {
   console.log("\nFinalizando aplicacion...");
   await delay(300);
 };
-
-try {
-  listPendingTasks();
-} catch (error: unknown) {
-  const message = error instanceof Error ? error.message : "Error desconocido";
-  console.error(`Error controlado: ${message}`);
-}
 
 main().catch((error: unknown) => {
   console.error("Error no controlado:", error);

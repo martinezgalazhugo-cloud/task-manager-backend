@@ -54,6 +54,5 @@ export const deleteTask = (id: number): Task => {
 };
 
 //Buscar todas las tareas con estado "pending" y devolverlas.
-export const listPendingTasks = (): readonly Task[] => {
-  return tasks.filter((task) => task.status === "pending");
-};
+export const listPendingTasks = (): readonly Task[] =>
+  tasks.filter((task) => task.status === "pending");
