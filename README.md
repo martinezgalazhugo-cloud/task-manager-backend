@@ -9,7 +9,9 @@ Crear el archivo package.json que identifica y configura el proyecto: pnpm init
 "start": "tsx src/index.ts" (este comando era de la act2, cambiadio por node dist/server.js)
 "dev": "tsx watch src/index.ts",
 
-##Me quede en el paso 5
+##app.ts configura Express sin abrir el puerto. server.ts inicia la escucha. Esta separación facilita
+posteriormente las pruebas automatizadas porque la aplicación puede importarse sin arrancar un
+servidor adicional.
 
 Agregar TypeScript, el ejecutor TSX y los tipos de Node.js como dependencias de desarrollo: pnpm add -D typescript tsx @types/node
 

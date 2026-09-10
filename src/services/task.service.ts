@@ -1,10 +1,58 @@
 import { tasks } from "../data/tasks.js";
-
+import { AppError } from "../errors/app-error.js";
 import type { Task } from "../models/task.js";
 
 //  Concentrar las operaciones del dominio y evitar que index.ts manipule directamente la
 //colección.
 
+/*
+ El parámetro title se recibe como unknown porque un cliente externo puede enviar cualquier tipo. El
+servicio valida antes de utilizar trim. La función deleteTask devuelve void porque una eliminación
+correcta no necesita producir un objeto nuevo. 
+ 
+ */
+
+export const listTasks = (): readonly Task[] => tasks;
+
+//Buscar una tarea por su id y devolverla. Si no existe, devolver undefined.
+export const findTaskById = (id: number): Task => {
+  const task = tasks.find((item) => item.id === id);
+  if (!task) {
+    throw new AppError(`No existe una tarea con el id ${id}.`, 404);
+  }
+  return task;
+};
+
+// Crear una nueva tarea con el título proporcionado y agregarla a la colección.
+export const createTask = (title: unknown): Task => {
+  if (typeof title !== "string" || !title.trim()) {
+    throw new AppError("El campo title es obligatorio.", 400);
+  }
+  const task: Task = {
+    id: Math.max(0, ...tasks.map((item) => item.id)) + 1,
+    title: title.trim(),
+    status: "pending",
+    createdAt: new Date(),
+  };
+  tasks.push(task);
+  return task;
+};
+
+export const completeTask = (id: number): Task => {
+  const task = findTaskById(id);
+  task.status = "completed";
+  return task;
+};
+
+export const deleteTask = (id: number): void => {
+  const index = tasks.findIndex((item) => item.id === id);
+  if (index === -1) {
+    throw new AppError(`No existe una tarea con el id ${id}.`, 404);
+  }
+  tasks.splice(index, 1);
+};
+
+/*
 export const listTasks = (): readonly Task[] => tasks;
 
 //Buscar una tarea por su id y devolverla. Si no existe, devolver undefined.
@@ -56,3 +104,4 @@ export const deleteTask = (id: number): Task => {
 //Buscar todas las tareas con estado "pending" y devolverlas.
 export const listPendingTasks = (): readonly Task[] =>
   tasks.filter((task) => task.status === "pending");
+*/
