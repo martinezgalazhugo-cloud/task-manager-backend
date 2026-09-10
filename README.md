@@ -6,6 +6,11 @@ serve: ejecuta con Node.js el JavaScript previamente compilado.
 
 Crear el archivo package.json que identifica y configura el proyecto: pnpm init
 
+"start": "tsx src/index.ts" (este comando era de la act2, cambiadio por node dist/server.js)
+"dev": "tsx watch src/index.ts",
+
+##Me quede en el paso 5
+
 Agregar TypeScript, el ejecutor TSX y los tipos de Node.js como dependencias de desarrollo: pnpm add -D typescript tsx @types/node
 
 1. ¿Cuál es la función de Node.js en este proyecto?
