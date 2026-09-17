@@ -15,20 +15,9 @@ servidor adicional.
 
 Agregar TypeScript, el ejecutor TSX y los tipos de Node.js como dependencias de desarrollo: pnpm add -D typescript tsx @types/node
 
-1. ¿Cuál es la función de Node.js en este proyecto?
-   Ejecuta JavaScript fuera del navegador y proporciona APIs del entorno del
-   servidor.
-2. ¿Qué errores ayuda a detectar TypeScript antes de ejecutar la aplicación?
-   TypeScript permite detectar principalmente errores relacionados con los tipos de datos antes de ejecutar el programa.
-3. ¿Por qué se separaron models, data, services y utils?
-   Para una mejor organizacion del proyecto principal.
-4. ¿Qué diferencia existe entre una función síncrona y una función async?
-   Una función síncrona ejecuta sus instrucciones de manera secuencial y espera a que cada operación termine antes de continuar. Una función async permite trabajar con operaciones asíncronas y devuelve una Promise.
-5. ¿Por qué findTaskById devuelve Task | undefined?
-   Porque no siempre existe una tarea con el ID que se está buscando.
-6. ¿Qué ventaja aporta leer APP_NAME desde process.env?
-   Permite configurar el nombre de la aplicación mediante una variable de entorno, sin tener que modificar directamente el código fuente.
-7. ¿Qué diferencia observó entre pnpm start y la secuencia pnpm build + pnpm serve?
-   npm start normalmente ejecuta directamente el comando configurado como start en package.json. Dependiendo del proyecto, puede ejecutar el código mediante tsx, node u otra herramienta.
-8. ¿Qué parte de este proyecto podrá reutilizarse cuando se construya la API con Express?
-   Principalmente se podrá reutilizar la lógica de negocio y la estructura interna del proyecto.
+400 INVALID_ID o INVALID_JSON La sintaxis o el identificador no puede interpretarse.
+404 TASK_NOT_FOUND o
+ROUTE_NOT_FOUND El recurso o la ruta no existe.
+415 UNSUPPORTED_MEDIA_TYPE Una ruta con cuerpo no declara application/json.
+422 VALIDATION_ERROR El JSON es válido, pero sus campos no cumplen las reglas.
+500 INTERNAL_ERROR Ocurrió un fallo no previsto
