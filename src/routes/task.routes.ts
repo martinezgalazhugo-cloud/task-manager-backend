@@ -4,6 +4,9 @@
 router.param ejecuta validateTaskId siempre que una ruta contenga :id. En POST, requireJson se ejecuta 
 antes de validateTaskTitle. Si un middleware envía un error mediante next(error), Express omite el resto de la 
 cadena y pasa al manejador central.
+
+La persistencia se implementa detrás del servicio. El cliente no necesita rutas paralelas ni
+prefijos como /mongodb. Solo cambia el valor de :id.
 */
 
 import { Router } from "express";

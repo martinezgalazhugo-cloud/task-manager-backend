@@ -21,3 +21,9 @@ ROUTE_NOT_FOUND El recurso o la ruta no existe.
 415 UNSUPPORTED_MEDIA_TYPE Una ruta con cuerpo no declara application/json.
 422 VALIDATION_ERROR El JSON es válido, pero sus campos no cumplen las reglas.
 500 INTERNAL_ERROR Ocurrió un fallo no previsto
+
+1. INVALID_ID con 400 significa que la URL contiene un formato no utilizable.
+2. TASK_NOT_FOUND con 404 significa que el ObjectId es válido, pero no existe una tarea.
+3. PERSISTENCE_VALIDATION_ERROR con 422 significa que el modelo rechazó un documento.
+4. DATABASE_UNAVAILABLE con 503 significa que la operación no pudo usar el almacenamiento.
+5. El errorHandler conserva message, code, details y requestId, pero no devuelve stack ni la URI.
