@@ -7,12 +7,16 @@ cadena y pasa al manejador central.
 
 La persistencia se implementa detrás del servicio. El cliente no necesita rutas paralelas ni
 prefijos como /mongodb. Solo cambia el valor de :id.
+
+PATCH /:id requiere JSON y validación de cambios. taskRouter.param sigue validando
+ObjectId para las rutas que contienen :id. La ruta especializada /:id/complete se conserva.
 */
 
 import { Router } from "express";
 import {
   getTask,
   getTasks,
+  patchTask,
   patchTaskComplete,
   postTask,
   removeTask,
@@ -20,10 +24,12 @@ import {
 import { requireJson } from "../middlewares/require-json.middleware.js";
 import { validateTaskId } from "../middlewares/validate-task-id.middleware.js";
 import { validateTaskTitle } from "../middlewares/validate-task-title.middleware.js";
+import { validateTaskUpdate } from "../middlewares/validate-task-update.middleware.js";
 export const taskRouter = Router();
 taskRouter.param("id", validateTaskId);
 taskRouter.get("/", getTasks);
 taskRouter.get("/:id", getTask);
 taskRouter.post("/", requireJson, validateTaskTitle, postTask);
+taskRouter.patch("/:id", requireJson, validateTaskUpdate, patchTask);
 taskRouter.patch("/:id/complete", patchTaskComplete);
 taskRouter.delete("/:id", removeTask);

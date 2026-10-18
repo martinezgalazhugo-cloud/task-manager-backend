@@ -2,7 +2,11 @@
  * El esquema concentra reglas que deben cumplirse incluso si otro proceso usa TaskModel.
 TASK_STATUSES crea una fuente única para el tipo y el enum. timestamps agrega createdAt y updatedAt;
 versionKey false evita __v porque esta API todavía no usa control de versiones de documentos.
- */
+ 
+TaskUpdate declara title y status como opcionales porque PATCH puede recibir uno de
+ellos o ambos. El esquema y TaskModel permanecen iguales.
+
+*/
 
 import { Schema, model } from "mongoose";
 export const TASK_STATUSES = ["pending", "completed"] as const;
@@ -19,6 +23,10 @@ export interface Task {
   status: TaskStatus;
   createdAt: Date;
   updatedAt: Date;
+}
+export interface TaskUpdate {
+  title?: string;
+  status?: TaskStatus;
 }
 const taskSchema = new Schema<TaskPersistence>(
   {

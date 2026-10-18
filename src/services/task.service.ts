@@ -2,11 +2,20 @@
  * El servicio es la frontera entre la aplicación y Mongoose. toTask transforma _id en id. Cada
 función espera la consulta con await y convierte las fallas conocidas en AppError. Migrar también completeTask y
 deleteTask evita que la API dependa de dos almacenamientos incompatibles.
+
+updateTask usa $set para modificar solo los campos validados. new true devuelve el
+documento actualizado y runValidators true aplica el esquema. completeTask delega en updateTask para
+evitar dos implementaciones distintas.
  */
 
 import mongoose, { type HydratedDocument } from "mongoose";
 import { AppError } from "../errors/app-error.js";
-import { TaskModel, type Task, type TaskPersistence } from "../models/task.js";
+import {
+  TaskModel,
+  type Task,
+  type TaskPersistence,
+  type TaskUpdate,
+} from "../models/task.js";
 const toTask = (document: HydratedDocument<TaskPersistence>): Task => ({
   id: document._id.toString(),
   title: document.title,
@@ -34,6 +43,7 @@ const mapPersistenceError = (error: unknown): AppError => {
     "DATABASE_UNAVAILABLE",
   );
 };
+
 export const listTasks = async (): Promise<Task[]> => {
   try {
     const documents = await TaskModel.find().sort({ createdAt: 1 });
@@ -65,11 +75,14 @@ export const createTask = async (title: string): Promise<Task> => {
     throw mapPersistenceError(error);
   }
 };
-export const completeTask = async (id: string): Promise<Task> => {
+export const updateTask = async (
+  id: string,
+  changes: TaskUpdate,
+): Promise<Task> => {
   try {
     const document = await TaskModel.findByIdAndUpdate(
       id,
-      { status: "completed" },
+      { $set: changes },
       { new: true, runValidators: true },
     );
     if (!document) {
@@ -84,6 +97,8 @@ export const completeTask = async (id: string): Promise<Task> => {
     throw mapPersistenceError(error);
   }
 };
+export const completeTask = async (id: string): Promise<Task> =>
+  updateTask(id, { status: "completed" });
 export const deleteTask = async (id: string): Promise<void> => {
   try {
     const document = await TaskModel.findByIdAndDelete(id);
