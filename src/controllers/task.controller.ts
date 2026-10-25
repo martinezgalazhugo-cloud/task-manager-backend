@@ -12,6 +12,8 @@ manejador central registrado al final de app.ts.
 
 patchTask no vuelve a validar ni conoce Mongoose. Espera updateTask y responde 200
 con la tarea actualizada. Si la promesa falla, Express 5 envía el error al manejador central.
+getTasks toma TaskListQuery de res.locals y responde directamente con TaskListResult.
+Los demás controladores permanecen iguales; no deben conocer filtros de MongoDB ni calcular skip.
 */
 
 import type { Request, Response } from "express";
@@ -24,7 +26,7 @@ import {
   updateTask,
 } from "../services/task.service.js";
 export const getTasks = async (_req: Request, res: Response): Promise<void> => {
-  res.status(200).json({ data: await listTasks() });
+  res.status(200).json(await listTasks(res.locals.taskQuery));
 };
 export const getTask = async (_req: Request, res: Response): Promise<void> => {
   res.status(200).json({ data: await findTaskById(res.locals.taskId) });
