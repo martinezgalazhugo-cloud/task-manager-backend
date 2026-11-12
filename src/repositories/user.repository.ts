@@ -1,13 +1,11 @@
 /**
- * Objetivo. Encapsular consultas Mongoose y traducir errores de persistencia al contrato de la API.
-El servicio no debe conocer códigos internos de MongoDB. El repositorio permite seleccionar passwordHash
-solo durante login y convierte el código 11000 en un conflicto legible.
-
-Agregar la actualización de rol al repositorio
-Objetivo. Mantener el acceso a Mongoose fuera del script administrativo.
-El repositorio agrega setUserRoleByEmail y reutiliza execute para traducir errores de persistencia.
-findOneAndUpdate devuelve el documento actualizado y ejecuta los validadores del modelo.
+ *
+Consultar un usuario por su identificador
+Objetivo. Agregar al repositorio la operación mínima que necesita /me.
+El repositorio mantiene el acceso a Mongoose y el mapeo de errores. findById respeta select: false del
+passwordHash, por lo que la consulta no recupera el hash.
  */
+
 import mongoose, { type HydratedDocument } from "mongoose";
 import { AppError } from "../errors/app-error.js";
 import {
@@ -70,6 +68,9 @@ export const findUserDocumentByEmail = async (
     if (includePasswordHash) query.select("+passwordHash");
     return query;
   });
+export const findUserDocumentById = async (
+  id: string,
+): Promise<UserDocument | null> => execute(async () => UserModel.findById(id));
 export const createUserDocument = async (
   data: CreateUserRecord,
 ): Promise<UserDocument> => execute(async () => UserModel.create(data));

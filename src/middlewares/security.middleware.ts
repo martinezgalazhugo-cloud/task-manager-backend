@@ -5,7 +5,6 @@ El origen configurado recibe Access-Control-Allow-Origin. Las solicitudes sin Or
 aplicaciones móviles y comunicación servidor a servidor. Un origen diferente puede obtener una respuesta
 HTTP, pero el navegador no podrá entregarla al JavaScript de esa página.
  */
-
 import cors, { type CorsOptions } from "cors";
 import { rateLimit } from "express-rate-limit";
 import helmet from "helmet";
@@ -25,6 +24,9 @@ const corsOptions: CorsOptions = {
   maxAge: 600,
 };
 export const securityHeaders = helmet();
+export const documentationSecurityHeaders = helmet({
+  contentSecurityPolicy: false,
+});
 export const corsPolicy = cors(corsOptions);
 export const authRateLimiter = rateLimit({
   windowMs: env.AUTH_RATE_LIMIT_WINDOW_MS,
