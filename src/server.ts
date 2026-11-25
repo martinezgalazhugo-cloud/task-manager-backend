@@ -73,26 +73,27 @@ import type { Server } from "node:http";
 import { app } from "./app.js";
 import { connectDatabase, disconnectDatabase } from "./config/database.js";
 import { env } from "./config/env.js";
+
 let server: Server | undefined;
+
 const start = async (): Promise<void> => {
   try {
     await connectDatabase({
       uri: env.MONGODB_URI,
       dbName: env.MONGODB_DB_NAME,
     });
-    server = app.listen(env.PORT, () => {
-      console.log(`API disponible en http://localhost:${env.PORT}`);
-    });
     server = app.listen(env.PORT, "0.0.0.0", () => {
       console.log(`API ${env.APP_VERSION} disponible en ${env.PUBLIC_API_URL}`);
     });
-  } catch {
+  } catch (error) {
+    console.error("Error al iniciar la API:", error);
     console.error(
       "No fue posible iniciar la API. Revisa la configuración y la conexión.",
     );
     process.exitCode = 1;
   }
 };
+
 const shutdown = async (signal: string): Promise<void> => {
   console.log(`Se recibió ${signal}. Cerrando la API.`);
   if (server) {
@@ -102,12 +103,15 @@ const shutdown = async (signal: string): Promise<void> => {
   }
   await disconnectDatabase();
 };
+
 for (const signal of ["SIGINT", "SIGTERM"] as const) {
   process.once(signal, () => {
-    void shutdown(signal).catch(() => {
+    void shutdown(signal).catch((error) => {
+      console.error("Error al cerrar la API:", error);
       console.error("No fue posible cerrar la API correctamente.");
       process.exitCode = 1;
     });
   });
 }
+
 await start();
