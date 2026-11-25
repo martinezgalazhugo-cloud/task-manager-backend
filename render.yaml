@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: task-api-express-reemplaza
+    name: task-api-express-hugo
     runtime: node
     plan: free
     buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm build
@@ -37,7 +37,7 @@ services:
         value: 10
 
   - type: web
-    name: task-client-react-reemplaza
+    name: task-client-react-hugo
     runtime: static
     buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm client:build
     staticPublishPath: ./client/dist
