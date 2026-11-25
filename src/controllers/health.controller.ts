@@ -5,14 +5,19 @@ error automáticamente al manejador central.
  */
 
 import type { Request, Response } from "express";
-import { checkDatabaseHealth } from "../services/database.service.js";
+import { env } from "../config/env.js";
+import { getDatabaseStatus } from "../services/database.service.js";
 export const getHealth = (_req: Request, res: Response): void => {
-  res.status(200).json({ status: "ok" });
+  res.status(200).json({
+    data: {
+      //se cambio up por connected para que coincida con el estado de la base de datos
+      status: "connected",
+      version: env.APP_VERSION,
+      environment: env.NODE_ENV,
+    },
+  });
 };
-export const getDatabaseHealth = async (
-  _req: Request,
-  res: Response,
-): Promise<void> => {
-  const database = await checkDatabaseHealth();
-  res.status(200).json({ data: { database } });
+export const getDatabaseHealth = (_req: Request, res: Response): void => {
+  const data = getDatabaseStatus();
+  res.status(data.status === "connected" ? 200 : 503).json({ data });
 };

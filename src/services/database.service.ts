@@ -28,3 +28,11 @@ export const checkDatabaseHealth = async (): Promise<DatabaseHealth> => {
     throw databaseUnavailable();
   }
 };
+
+//se creo una función para obtener el estado de la base de datos sin necesidad de hacer ping, ya que esto puede ser costoso en términos de rendimiento. Esta función se utiliza en el controlador de salud para devolver el estado actual de la conexión a la base de datos.
+export const getDatabaseStatus = (): DatabaseHealth => {
+  if (mongoose.connection.readyState !== 1) {
+    throw databaseUnavailable();
+  }
+  return { status: "connected" };
+};
